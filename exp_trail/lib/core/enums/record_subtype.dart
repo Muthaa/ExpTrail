@@ -20,5 +20,14 @@ enum RecordSubtype {
   investmentPurchase,
   investmentRedemption,
 
+  airtimePurchase,
+  airtimeTopUp,
+  loanRepayment,
+  loanDisbursement,
+  savingsDeposit,
+  savingsWithdrawal,
+
+  billPayment,
+
   unknown,
 }

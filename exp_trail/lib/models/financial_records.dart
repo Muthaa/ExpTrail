@@ -1,171 +1,42 @@
-import '/core/constants/mpesa_keywords.dart';
-import '/core/enums/message_type.dart';
+import '/core/enums/financial_record_type.dart';
 import '/core/enums/record_subtype.dart';
 import '/core/enums/transaction_status.dart';
-import '../library/classifiers/message_classifier.dart';
+import '/models/party.dart';
 
-class MpesaMessageClassifier implements MessageClassifier {
-  @override
-  ClassificationResult classify(String message) {
-    final text = message.toLowerCase().trim();
+class FinancialRecord {
+  final String reference;
 
-    // --------------------------------------------------
-    // Determine transaction status
-    // --------------------------------------------------
+  final DateTime transactionDate;
 
-    TransactionStatus status = TransactionStatus.unknown;
+  final double amount;
 
-    if (text.contains(MpesaKeywords.failed)) {
-      status = TransactionStatus.failed;
-    } else if (text.contains(MpesaKeywords.pending)) {
-      status = TransactionStatus.pending;
-    } else if (text.contains(MpesaKeywords.confirmed)) {
-      status = TransactionStatus.successful;
-    }
+  final double balance;
 
-    // --------------------------------------------------
-    // Ignore non-transaction messages
-    // --------------------------------------------------
+  final FinancialRecordType type;
 
-    if (status == TransactionStatus.unknown) {
-      return _result(MessageType.notification, RecordSubtype.unknown, status);
-    }
+  final RecordSubtype subtype;
 
-    // --------------------------------------------------
-    // PayBill
-    // Must be checked before Send Money
-    // --------------------------------------------------
+  final TransactionStatus status;
 
-    if (text.contains(MpesaKeywords.sentTo) &&
-        text.contains(MpesaKeywords.forAccount)) {
-      return _result(MessageType.transaction, RecordSubtype.payBill, status);
-    }
+  final String title;
 
-    // --------------------------------------------------
-    // Buy Goods
-    // --------------------------------------------------
+  final Party? party;
 
-    if (text.contains(MpesaKeywords.paidTo)) {
-      return _result(MessageType.transaction, RecordSubtype.buyGoods, status);
-    }
+  final double transactionCost;
 
-    // --------------------------------------------------
-    // Send Money
-    // --------------------------------------------------
+  final String rawMessage;
 
-    if (text.contains(MpesaKeywords.sentTo)) {
-      return _result(MessageType.transaction, RecordSubtype.sendMoney, status);
-    }
-
-    // --------------------------------------------------
-    // Receive Money
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.received)) {
-      return _result(
-        MessageType.transaction,
-        RecordSubtype.receiveMoney,
-        status,
-      );
-    }
-
-    // --------------------------------------------------
-    // Agent Deposit
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.give)) {
-      return _result(MessageType.transaction, RecordSubtype.deposit, status);
-    }
-
-    // --------------------------------------------------
-    // Agent Withdrawal
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.amWithdraw) ||
-        text.contains(MpesaKeywords.withdraw)) {
-      return _result(MessageType.transaction, RecordSubtype.withdrawal, status);
-    }
-
-    // --------------------------------------------------
-    // M-Shwari Deposit
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.transferredToMShwari)) {
-      return _result(
-        MessageType.transaction,
-        RecordSubtype.mshwariDeposit,
-        status,
-      );
-    }
-
-    // --------------------------------------------------
-    // M-Shwari Withdrawal
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.transferredFromMShwari)) {
-      return _result(
-        MessageType.transaction,
-        RecordSubtype.mshwariWithdrawal,
-        status,
-      );
-    }
-
-    // --------------------------------------------------
-    // KCB Deposit
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.transferredToKcb)) {
-      return _result(MessageType.transaction, RecordSubtype.kcbDeposit, status);
-    }
-
-    // --------------------------------------------------
-    // KCB Withdrawal
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.transferredFromKcb)) {
-      return _result(
-        MessageType.transaction,
-        RecordSubtype.kcbWithdrawal,
-        status,
-      );
-    }
-
-    // --------------------------------------------------
-    // Fuliza Loan
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.fulizaLoan)) {
-      return _result(MessageType.transaction, RecordSubtype.fulizaLoan, status);
-    }
-
-    // --------------------------------------------------
-    // Fuliza Repayment
-    // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.fulizaRepayment)) {
-      return _result(
-        MessageType.transaction,
-        RecordSubtype.fulizaRepayment,
-        status,
-      );
-    }
-
-    // --------------------------------------------------
-    // Unknown Transaction
-    // --------------------------------------------------
-
-    return _result(MessageType.transaction, RecordSubtype.unknown, status);
-  }
-
-  ClassificationResult _result(
-    MessageType messageType,
-    RecordSubtype subtype,
-    TransactionStatus status,
-  ) {
-    return ClassificationResult(
-      messageType: messageType,
-      subtype: subtype,
-      status: status,
-    );
-  }
+  const FinancialRecord({
+    required this.reference,
+    required this.transactionDate,
+    required this.amount,
+    required this.balance,
+    required this.type,
+    required this.subtype,
+    required this.status,
+    required this.title,
+    required this.rawMessage,
+    this.party,
+    this.transactionCost = 0,
+  });
 }
