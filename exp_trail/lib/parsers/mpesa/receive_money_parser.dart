@@ -9,41 +9,37 @@ import '/parsers/common_field_parser.dart';
 import '../parser.dart';
 import '/builders/financial_record_builder.dart';
 
-class SendMoneyParser implements Parser {
+class ReceiveMoneyParser implements Parser {
   @override
   ParseResult parse(RawMessage message, ClassificationResult classification) {
     try {
-      // Parse fields common to all M-PESA transactions
       final common = CommonFieldsParser.parse(message.body);
 
-      // Extract recipient name and phone
-      final recipientMatch = MpesaPatterns.sendMoneyRecipient.firstMatch(
+      final senderMatch = MpesaPatterns.receiveMoneySender.firstMatch(
         message.body,
       );
 
-      if (recipientMatch == null) {
-        return const ParseResult.failure(
-          'Unable to extract recipient information.',
-        );
+      if (senderMatch == null) {
+        return const ParseResult.failure('Unable to extract sender.');
       }
 
-      final party = Party(
-        name: recipientMatch.group(1)!.trim(),
-        phone: recipientMatch.group(2)!,
-        type: PartyType.person,
-      );
+      final sender = senderMatch.group(1)!.trim();
+
+      final party = Party(name: sender, type: PartyType.unknown);
 
       final record = FinancialRecordBuilder.build(
         common: common,
         classification: classification,
-        title: RecordTitles.sendMoney,
+        title: RecordTitles.receiveMoney,
         rawMessage: message.body,
         party: party,
       );
 
       return ParseResult.success(record);
     } catch (e) {
-      return ParseResult.failure('Failed to parse Send Money transaction: $e');
+      return ParseResult.failure(
+        'Failed to parse Receive Money transaction: $e',
+      );
     }
   }
 }
