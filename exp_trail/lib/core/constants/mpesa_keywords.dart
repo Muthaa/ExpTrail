@@ -35,7 +35,7 @@ class MpesaKeywords {
   // ===== Fuliza =====
 
   static const fuliza = 'fuliza';
-  static const fulizaLoan = 'fuliza amount';
+  static const fulizaLoan = 'fuliza m-pesa amount';
   static const fulizaRepayment = 'outstanding fuliza';
 
   // ===== Generic Transfer =====

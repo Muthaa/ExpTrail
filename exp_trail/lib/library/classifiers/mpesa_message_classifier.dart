@@ -3,6 +3,7 @@ import '/core/enums/message_type.dart';
 import '/core/enums/record_subtype.dart';
 import '/core/enums/transaction_status.dart';
 import 'message_classifier.dart';
+import '/core/extensions/string_extensions.dart';
 
 class MpesaMessageClassifier implements MessageClassifier {
   @override
@@ -35,9 +36,7 @@ class MpesaMessageClassifier implements MessageClassifier {
     // PayBill
     // Must be checked before Send Money
     // --------------------------------------------------
-
-    if (text.contains(MpesaKeywords.sentTo) &&
-        text.contains(MpesaKeywords.forAccount)) {
+    if (text.containsAll([MpesaKeywords.sentTo, MpesaKeywords.forAccount])) {
       return _result(MessageType.transaction, RecordSubtype.payBill, status);
     }
 

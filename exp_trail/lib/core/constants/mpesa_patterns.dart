@@ -47,4 +47,21 @@ class MpesaPatterns {
     r'sent to\s+(.*?)\s+(07\d{8}|01\d{8})',
     caseSensitive: false,
   );
+
+  static final receiveMoneySender = RegExp(
+    r'from\s+(.+?)\s+on\s',
+    caseSensitive: false,
+  );
+
+  /// Ksh30.00 paid to SUPER METRO.
+  static final buyGoodsMerchant = RegExp(
+    r'paid\s+to\s+(.+?)\.',
+    caseSensitive: false,
+  );
+
+  /// sent to KCB M-PESA for account 123456 on 01/01/2023 at 12:00 PM.
+  static final payBill = RegExp(
+    r'sent\s+to\s+(.+?)\s+for\s+account\s+(.+?)\s+on',
+    caseSensitive: false,
+  );
 }
