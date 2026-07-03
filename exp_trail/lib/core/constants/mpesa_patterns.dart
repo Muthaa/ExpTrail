@@ -64,4 +64,67 @@ class MpesaPatterns {
     r'sent\s+to\s+(.+?)\s+for\s+account\s+(.+?)\s+on',
     caseSensitive: false,
   );
+
+  /// Withdraw Ksh500 from 275958 - Agent Name
+  static final cashWithdrawal = RegExp(
+    r'Withdraw\s+Ksh[\d,]+\.\d{2}\s+from\s+(\d+)\s*-\s*(.+?)\s+New\s+M-PESA',
+    caseSensitive: false,
+  );
+
+  /// Agent Cash Deposit
+  /// Give Ksh9,000.00 cash to IFTAH COMM Simba pork...
+  static final cashDeposit = RegExp(
+    r'Give\s+Ksh[\d,]+\.\d{2}\s+cash\s+to\s+(.+?)\s+New\s+M-PESA',
+    caseSensitive: false,
+  );
+
+  static final mshwariDeposit = RegExp(
+    r'transferred\s+to\s+M-Shwari',
+    caseSensitive: false,
+  );
+
+  static final mshwariWithdrawal = RegExp(
+    r'transferred\s+from\s+M-Shwari',
+    caseSensitive: false,
+  );
+
+  static final kcbDeposit = RegExp(
+    r'transfered\s+to\s+KCB\s+M-PESA',
+    caseSensitive: false,
+  );
+
+  static final kcbWithdrawal = RegExp(
+    r'from\s+your\s+KCB\s+M-PESA',
+    caseSensitive: false,
+  );
+
+  static final fulizaAccessFee = RegExp(
+    r'Access Fee charged Ksh\s?([\d,]+\.\d{2})',
+    caseSensitive: false,
+  );
+
+  static final fulizaOutstanding = RegExp(
+    r'outstanding amount is Ksh\s?([\d,]+\.\d{2})',
+    caseSensitive: false,
+  );
+
+  static final fulizaDueDate = RegExp(
+    r'due on (\d{2}/\d{2}/\d{2})',
+    caseSensitive: false,
+  );
+
+  static final investmentPurchase = RegExp(
+    r'sent to (.+?) for account ([A-Za-z0-9:-]+)',
+    caseSensitive: false,
+  );
+
+  // static final investmentRedemption = RegExp(
+  //   r'from\s+(.+?)\s+on\s+\d{1,2}/\d{1,2}/\d{2}',
+  //   caseSensitive: false,
+  // );
+
+  static final investmentRedemption = RegExp(
+    r'from\s+(.+?)\s+(\d+)\s+on',
+    caseSensitive: false,
+  );
 }

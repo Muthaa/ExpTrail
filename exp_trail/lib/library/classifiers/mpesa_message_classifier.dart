@@ -4,6 +4,7 @@ import '/core/enums/record_subtype.dart';
 import '/core/enums/transaction_status.dart';
 import 'message_classifier.dart';
 import '/core/extensions/string_extensions.dart';
+import '/core/constants/investment_keywords.dart';
 
 class MpesaMessageClassifier implements MessageClassifier {
   @override
@@ -46,6 +47,21 @@ class MpesaMessageClassifier implements MessageClassifier {
 
     if (text.contains(MpesaKeywords.paidTo)) {
       return _result(MessageType.transaction, RecordSubtype.buyGoods, status);
+    }
+
+    // Investment Purchase
+    bool _containsInvestment(String text) {
+      return InvestmentKeywords.providers.any(text.contains);
+    }
+
+    if (text.contains(MpesaKeywords.sentTo) &&
+        text.contains(MpesaKeywords.forAccount) &&
+        _containsInvestment(text)) {
+      return _result(
+        MessageType.transaction,
+        RecordSubtype.investmentPurchase,
+        status,
+      );
     }
 
     // --------------------------------------------------
