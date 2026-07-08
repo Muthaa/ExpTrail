@@ -89,12 +89,12 @@ class MpesaPatterns {
   );
 
   static final kcbDeposit = RegExp(
-    r'transfered\s+to\s+KCB\s+M-PESA',
+    r'transfered\s+to\s+KCB\s+M-PESA\s+account',
     caseSensitive: false,
   );
 
   static final kcbWithdrawal = RegExp(
-    r'from\s+your\s+KCB\s+M-PESA',
+    r'transfered\s+Ksh.*?from\s+your\s+KCB\s+M-PESA\s+account',
     caseSensitive: false,
   );
 
@@ -117,11 +117,6 @@ class MpesaPatterns {
     r'sent to (.+?) for account ([A-Za-z0-9:-]+)',
     caseSensitive: false,
   );
-
-  // static final investmentRedemption = RegExp(
-  //   r'from\s+(.+?)\s+on\s+\d{1,2}/\d{1,2}/\d{2}',
-  //   caseSensitive: false,
-  // );
 
   static final investmentRedemption = RegExp(
     r'from\s+(.+?)\s+(\d+)\s+on',

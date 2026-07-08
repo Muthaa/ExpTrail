@@ -5,6 +5,7 @@ import '/core/enums/transaction_status.dart';
 import 'message_classifier.dart';
 import '/core/extensions/string_extensions.dart';
 import '/core/constants/investment_keywords.dart';
+import '/core/constants/mpesa_patterns.dart';
 
 class MpesaMessageClassifier implements MessageClassifier {
   @override
@@ -50,13 +51,13 @@ class MpesaMessageClassifier implements MessageClassifier {
     }
 
     // Investment Purchase
-    bool _containsInvestment(String text) {
+    bool containsInvestment(String text) {
       return InvestmentKeywords.providers.any(text.contains);
     }
 
     if (text.contains(MpesaKeywords.sentTo) &&
         text.contains(MpesaKeywords.forAccount) &&
-        _containsInvestment(text)) {
+        containsInvestment(text)) {
       return _result(
         MessageType.transaction,
         RecordSubtype.investmentPurchase,
@@ -88,7 +89,7 @@ class MpesaMessageClassifier implements MessageClassifier {
     // Agent Deposit
     // --------------------------------------------------
 
-    if (text.contains(MpesaKeywords.give)) {
+    if (MpesaPatterns.cashDeposit.hasMatch(message)) {
       return _result(MessageType.transaction, RecordSubtype.deposit, status);
     }
 
@@ -105,7 +106,7 @@ class MpesaMessageClassifier implements MessageClassifier {
     // M-Shwari Deposit
     // --------------------------------------------------
 
-    if (text.contains(MpesaKeywords.transferredToMShwari)) {
+    if (MpesaPatterns.mshwariDeposit.hasMatch(message)) {
       return _result(
         MessageType.transaction,
         RecordSubtype.mshwariDeposit,
@@ -117,7 +118,7 @@ class MpesaMessageClassifier implements MessageClassifier {
     // M-Shwari Withdrawal
     // --------------------------------------------------
 
-    if (text.contains(MpesaKeywords.transferredFromMShwari)) {
+    if (MpesaPatterns.mshwariWithdrawal.hasMatch(message)) {
       return _result(
         MessageType.transaction,
         RecordSubtype.mshwariWithdrawal,
@@ -129,7 +130,7 @@ class MpesaMessageClassifier implements MessageClassifier {
     // KCB Mpesa Deposit
     // --------------------------------------------------
 
-    if (text.contains(MpesaKeywords.transferredToKcb)) {
+    if (MpesaPatterns.kcbDeposit.hasMatch(message)) {
       return _result(MessageType.transaction, RecordSubtype.kcbDeposit, status);
     }
 
@@ -137,7 +138,7 @@ class MpesaMessageClassifier implements MessageClassifier {
     // KCB Mpesa Withdrawal
     // --------------------------------------------------
 
-    if (text.contains(MpesaKeywords.transferredFromKcb)) {
+    if (MpesaPatterns.kcbWithdrawal.hasMatch(message)) {
       return _result(
         MessageType.transaction,
         RecordSubtype.kcbWithdrawal,
@@ -149,7 +150,7 @@ class MpesaMessageClassifier implements MessageClassifier {
     // Fuliza Loan
     // --------------------------------------------------
 
-    if (text.contains(MpesaKeywords.fulizaLoan)) {
+    if (MpesaPatterns.fulizaOutstanding.hasMatch(message)) {
       return _result(MessageType.transaction, RecordSubtype.fulizaLoan, status);
     }
 
