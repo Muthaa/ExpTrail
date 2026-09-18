@@ -22,20 +22,15 @@ class AccountTransferParser implements Parser {
         title = RecordTitles.mshwariDeposit;
 
         party = const Party(name: 'M-Shwari', type: PartyType.self);
-      }
-      if (classification.subtype == RecordSubtype.mshwariWithdrawal) {
+      } else if (classification.subtype == RecordSubtype.mshwariWithdrawal) {
         title = RecordTitles.mshwariWithdrawal;
 
         party = const Party(name: 'M-Shwari', type: PartyType.self);
-      }
-
-      if (classification.subtype == RecordSubtype.kcbDeposit) {
+      } else if (classification.subtype == RecordSubtype.kcbDeposit) {
         title = RecordTitles.kcbDeposit;
 
         party = const Party(name: 'KCB M-PESA', type: PartyType.self);
-      }
-
-      if (classification.subtype == RecordSubtype.kcbWithdrawal) {
+      } else if (classification.subtype == RecordSubtype.kcbWithdrawal) {
         title = RecordTitles.kcbWithdrawal;
 
         party = const Party(name: 'KCB M-PESA', type: PartyType.self);

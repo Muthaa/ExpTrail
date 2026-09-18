@@ -1,12 +1,8 @@
 class CommonFields {
   final String reference;
-
   final double amount;
-
-  final DateTime transactionDate;
-
-  final double balance;
-
+  final DateTime? transactionDate;
+  final double? balance;
   final double transactionCost;
 
   const CommonFields({

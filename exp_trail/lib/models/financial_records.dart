@@ -6,11 +6,11 @@ import '/models/party.dart';
 class FinancialRecord {
   final String reference;
 
-  final DateTime transactionDate;
+  final DateTime? transactionDate;
 
   final double amount;
 
-  final double balance;
+  final double? balance;
 
   final FinancialRecordType type;
 

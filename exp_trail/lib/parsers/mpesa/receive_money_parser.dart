@@ -15,17 +15,31 @@ class ReceiveMoneyParser implements Parser {
     try {
       final common = CommonFieldsParser.parse(message.body);
 
-      final senderMatch = MpesaPatterns.receiveMoneySender.firstMatch(
-        message.body,
-      );
+      final senderWithPhone = MpesaPatterns.receiveMoneySenderWithPhone
+          .firstMatch(message.body);
 
-      if (senderMatch == null) {
-        return const ParseResult.failure('Unable to extract sender.');
+      final Party party;
+
+      if (senderWithPhone != null) {
+        party = Party(
+          name: senderWithPhone.group(1)!.trim(),
+          phone: senderWithPhone.group(2)!.trim(),
+          type: PartyType.person,
+        );
+      } else {
+        final senderNameOnly = MpesaPatterns.receiveMoneySenderNameOnly
+            .firstMatch(message.body);
+
+        if (senderNameOnly == null) {
+          return const ParseResult.failure('Unable to extract sender.');
+        }
+
+        party = Party(
+          name: senderNameOnly.group(1)!.trim(),
+          phone: null,
+          type: PartyType.person,
+        );
       }
-
-      final sender = senderMatch.group(1)!.trim();
-
-      final party = Party(name: sender, type: PartyType.unknown);
 
       final record = FinancialRecordBuilder.build(
         common: common,

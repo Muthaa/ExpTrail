@@ -6,4 +6,8 @@ class PermissionService {
 
     return status.isGranted;
   }
+
+  Future<bool> isGranted() async {
+    return Permission.sms.isGranted;
+  }
 }

@@ -2,10 +2,13 @@ class MpesaPatterns {
   MpesaPatterns._();
 
   /// Transaction code
-  static final reference = RegExp(r'^([A-Z0-9]{10})');
+  static final reference = RegExp(
+    r'(?:^|[\s.!])([A-Z0-9]{10})\s+(?=(?:Confirmed|confirmed))',
+    caseSensitive: false,
+  );
 
   /// Amount
-  static final amount = RegExp(r'Ksh\s?([\d,]+\.\d{2})');
+  static final amount = RegExp(r'Ksh\s?([\d,]+\.\d{2})', caseSensitive: false);
 
   /// Date and time
   static final date = RegExp(
@@ -15,13 +18,13 @@ class MpesaPatterns {
 
   /// Balance
   static final balance = RegExp(
-    r'New M-PESA balance is Ksh([\d,]+\.\d{2})',
+    r'(?:New\s+)?M-PESA\s+balance\s+is\s+Ksh([\d,]+\.\d{2})',
     caseSensitive: false,
   );
 
   /// Transaction Cost
   static final transactionCost = RegExp(
-    r'Transaction cost,?\s*Ksh\.?([\d,]+\.\d{2})',
+    r'(?:Transaction cost,?\s*Ksh\.?|Access Fee charged\s+Ksh\s*)([\d,]+\.\d{2})',
     caseSensitive: false,
   );
 
@@ -43,13 +46,37 @@ class MpesaPatterns {
   /// Merchant after "paid to"
   static final merchant = RegExp(r'paid to\s+(.*?)\s+on', caseSensitive: false);
 
-  static final sendMoneyRecipient = RegExp(
-    r'sent to\s+(.*?)\s+(07\d{8}|01\d{8})',
+  /// Send Money recipient with a full or partially masked phone number.
+  ///
+  /// Examples:
+  /// sent to JON DOE 0707855891 on ...
+  /// sent to JOHN DOE 0704XXX267 on ...
+  static final sendMoneyRecipientWithPhone = RegExp(
+    r'sent to\s+(.+?)\s+((?:07\d{8}|01\d{8}|07\d{2}[Xx*]+\d{3}|01\d{2}[Xx*]+\d{3}))\s+on',
+    caseSensitive: false,
+  );
+
+  /// Send Money recipient where M-PESA does not provide a phone number.
+  ///
+  /// Example:
+  /// sent to JON DOE on ...
+  static final sendMoneyRecipientNameOnly = RegExp(
+    r'sent to\s+(.+?)\s+on',
     caseSensitive: false,
   );
 
   static final receiveMoneySender = RegExp(
     r'from\s+(.+?)\s+on\s',
+    caseSensitive: false,
+  );
+
+  static final receiveMoneySenderWithPhone = RegExp(
+    r'from\s+(.+?)\s+((?:07\d{8}|01\d{8}|07\d{2}[Xx*]+\d{3}|01\d{2}[Xx*]+\d{3}))\s+on',
+    caseSensitive: false,
+  );
+
+  static final receiveMoneySenderNameOnly = RegExp(
+    r'from\s+(.+?)\s+on',
     caseSensitive: false,
   );
 

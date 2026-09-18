@@ -21,10 +21,6 @@ class CommonFieldsParser {
 
     final balanceText = ParserUtils.firstMatch(MpesaPatterns.balance, text, 1);
 
-    if (balanceText == null) {
-      throw Exception('Balance not found');
-    }
-
     final costText = ParserUtils.firstMatch(
       MpesaPatterns.transactionCost,
       text,
@@ -33,19 +29,21 @@ class CommonFieldsParser {
 
     final dateMatch = MpesaPatterns.date.firstMatch(text);
 
-    if (dateMatch == null) {
-      throw Exception('Date not found');
-    }
+    final DateTime? date;
 
-    final date = ParserUtils.parseMpesaDate(
-      dateMatch.group(1)!,
-      dateMatch.group(2)!,
-    );
+    if (dateMatch != null) {
+      date = ParserUtils.parseMpesaDate(
+        dateMatch.group(1)!,
+        dateMatch.group(2)!,
+      );
+    } else {
+      date = null;
+    }
 
     return CommonFields(
       reference: reference,
       amount: amountText.toMoney(),
-      balance: balanceText.toMoney(),
+      balance: balanceText?.toMoney(),
       transactionCost: costText?.toMoney() ?? 0,
       transactionDate: date,
     );

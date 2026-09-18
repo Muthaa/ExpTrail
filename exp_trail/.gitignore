@@ -46,3 +46,8 @@ app.*.map.json
 
 #test data
 /test_data/
+/test/fixtures/
+
+# Claude configuration
+CLAUDE.md
+.claude/
